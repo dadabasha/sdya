@@ -1,0 +1,23 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: sdya-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sdya_fund
+    ports:
+      - "3306:3306"
+    volumes:
+      - sdya_mysql:/var/lib/mysql
+  app:
+    build: .
+    depends_on: [mysql]
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/sdya_fund?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
+      DB_USER: root
+      DB_PASSWORD: root
+      PORT: 8080
+    ports:
+      - "8080:8080"
+volumes:
+  sdya_mysql:

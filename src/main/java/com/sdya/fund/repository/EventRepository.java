@@ -1,0 +1,1 @@
+package com.sdya.fund.repository;import com.sdya.fund.entity.FestivalEvent;import org.springframework.data.jpa.repository.JpaRepository;import java.util.*;public interface EventRepository extends JpaRepository<FestivalEvent,Long>{List<FestivalEvent> findByActiveTrueOrderByStartDateDesc();}

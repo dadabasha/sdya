@@ -1,0 +1,30 @@
+<div th:replace="~{layout :: shell(~{::section})}"><section><div class="top"><div><h1>Dashboard</h1><p class="muted" th:text="${'Logged in as '+currentUser.fullName+' ('+currentUser.role+')'}"></p></div></div>
+
+<div class="cards">
+  <div class="card" th:if="${showCashInHandReport or showTreasurer}"><b>Last Year In Hand</b><h2 th:text="${'₹ '+lastYearAmount}"></h2></div>
+  <div class="card" th:if="${showDonationReport}"><b>Donation Received</b><h2 th:text="${'₹ '+received}"></h2></div>
+  <div class="card" th:if="${showAuctionReport}"><b>Auction Received</b><h2 th:text="${'₹ '+auctionReceived}"></h2></div>
+  <div class="card" th:if="${showCashInHandReport or showTreasurer}"><b>This Year In Hand</b><h2 th:text="${'₹ '+balance}"></h2></div>
+  <div class="card" th:if="${showCashInHandReport or showTreasurer}"><b>Total In Hand</b><h2 th:text="${'₹ '+totalInHand}"></h2></div>
+  <div class="card" th:if="${showExpenseReport}"><b>Total Expense</b><h2 th:text="${'₹ '+spent}"></h2></div>
+</div>
+
+<div class="cards">
+  <div class="card" th:if="${showDueReport}"><b>Donation Due</b><h2 th:text="${'₹ '+due}"></h2></div>
+  <div class="card" th:if="${showAuctionReport}"><b>Auction Due</b><h2 th:text="${'₹ '+auctionDue}"></h2></div>
+  <div class="card" th:if="${showDonationReport}"><b>Donations</b><h2 th:text="${donationCount}"></h2></div>
+  <div class="card" th:if="${showAuctionReport}"><b>Auctions</b><h2 th:text="${auctionCount}"></h2></div>
+  <div class="card" th:if="${showDonationReport or showAuctionReport or showExpenseReport}"><b>Events</b><h2 th:text="${eventCount}"></h2></div>
+</div>
+
+<div class="cards">
+  <div class="card" th:if="${showDonationReport}"><h2>Donation by Event</h2><canvas id="eventChart"></canvas></div>
+  <div class="card" th:if="${showExpenseReport}"><h2>Expense by Category</h2><canvas id="expenseChart"></canvas></div>
+  <div class="card" th:if="${showAuctionReport}"><h2>Auction by Event</h2><canvas id="auctionChart"></canvas></div>
+</div>
+
+<div class="card tablewrap" th:if="${showDonationReport}"><h2>Recent Donations with Volunteer Work</h2><table><tr><th>Receipt</th><th>Donor</th><th>Volunteer</th><th>Work</th><th>Amount</th></tr><tr th:each="d:${recentDonations}"><td th:text="${d.receiptNo}"></td><td th:text="${d.donorName}"></td><td th:text="${d.volunteerName}"></td><td th:text="${d.volunteerWork}"></td><td th:text="${d.amount}"></td></tr></table></div>
+
+<div class="card tablewrap" th:if="${showExpenseReport}"><h2>Recent Expenses</h2><table><tr><th>Date</th><th>Title</th><th>Vendor</th><th>Mode</th><th>Amount</th></tr><tr th:each="e:${recentExpenses}"><td th:text="${#temporals.format(e.expenseDate,'dd-MM-yyyy')}"></td><td th:text="${e.title}"></td><td th:text="${e.vendorName}"></td><td th:text="${e.paymentMode}"></td><td th:text="${e.amount}"></td></tr></table></div>
+
+<script th:inline="javascript">const eventData=[[${eventTotals}]];const expenseData=[[${expenseTotals}]];const auctionData=[[${auctionTotals}]];setTimeout(()=>{if(document.getElementById('eventChart'))renderBar('eventChart',eventData.map(x=>x[0]),eventData.map(x=>x[1]));if(document.getElementById('expenseChart'))renderBar('expenseChart',expenseData.map(x=>x[0]),expenseData.map(x=>x[1]));if(document.getElementById('auctionChart'))renderBar('auctionChart',auctionData.map(x=>x[0]),auctionData.map(x=>x[1]));},200)</script></section></div>
